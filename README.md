@@ -1,29 +1,25 @@
-# Trustworthy AI
+# CausalVAE: Disentangled Representation Learning via Neural Structural Causal Models
 
-This repository is a collection of trustworthy AI related works from Huawei Noah's Ark Lab.  
+Code for the paper [CausalVAE: Disentangled Representation Learning via Neural Structural Causal Models](https://arxiv.org/abs/2004.08697.pdf) (CVPR, 2021), by Mengyue Yang, Furui Liu, Zhitang Chen, Xinwei Shen, Jianye Hao, and Jun Wang.
 
----
-The NeurIPS 2023 Causal Structure Learning Competition has released, looking forward to your participation！
+If you find it useful, please consider to cite the paper.
 
-[NeurIPS 2023|CSL Competition](https://gcastle-hub.github.io/csl-competition/)
+This is a causal disentanglement image package. 
 
----
+## Requirements
+- python 3.7
+- torch 1.4.1
 
-### gCastle
+## Process
 
-- A causal structure learning toolchain containing various functionalities related to causal learning and evaluation. A tech report describing the toolbox is available [here](https://arxiv.org/abs/2111.15155).
-- The package offers a number of causal discovery algorithms, most of which are gradient-based, hence the name: **g**radient-based **Ca**usal **st**ructure **le**arning pipeline.
+### Generate synthetic data: 
+- Generate flow data: python ./causal_data/flow.py
+- Generate pendulum data: python ./causal_data/pendulum.py
 
-### Competition
+### Train CausalVae:
+- Train on flow data: python ./run_flow.py
+- Train on pendulum data: python ./run_pendulum.py
 
-- Information and baselines for causality-related competitions arranged by Noah's Ark Lab.
-
-
-### Datasets
-
-- Code for generating synthetic datasets and real-world datasets that we have open-sourced.
-
-### Research 
- 
-- Research works related to causaility. We will continously add new methods here.
-- Currently contains implementations of CausalVAE, GAE, and causal discovery with reinforcement learning.
+### Intervention on synthetic data by CausalVae:
+- Intervention on flow data: python ./inference_flow.py
+- Intervention on pendulum data: python ./inference_pendulum.py
