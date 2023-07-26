@@ -7,7 +7,7 @@
 #MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the MIT License for more details.
 
 import torch
-from codebase import utils as ut
+from causal_vae import utils as ut
 import argparse
 from pprint import pprint
 cuda = torch.cuda.is_available()
@@ -29,8 +29,8 @@ from PIL import Image
 import os
 import numpy as np
 from torchvision import transforms
-from codebase import utils as ut
-import codebase.models.mask_vae_flow as sup_dag
+from causal_vae import utils as ut
+import causal_vae.models.mask_vae_flow as sup_dag
 import argparse
 from pprint import pprint
 cuda = torch.cuda.is_available()

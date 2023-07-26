@@ -7,7 +7,7 @@
 #MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the MIT License for more details.
 
 import sys
-sys.path.append('/home/dalab/yangmengyue/VAEs-RL/codebase/')
+#sys.path.append('/home/dalab/yangmengyue/VAEs-RL/codebase/')
 
-from codebase import models
-from codebase import *
+from causal_vae import models
+from causal_vae import *

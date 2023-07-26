@@ -8,8 +8,8 @@
 
 import torch
 import numpy as np
-from codebase import utils as ut
-from codebase.models import nns
+from causal_vae import utils as ut
+from causal_vae.models import nns
 from torch import nn
 from torch.nn import functional as F
 device = torch.device("cuda:0" if(torch.cuda.is_available()) else "cpu")

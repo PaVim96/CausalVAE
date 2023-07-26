@@ -10,8 +10,8 @@ import setuptools
 with open("README.md", "r") as fh:  
     long_description = fh.read()
 setuptools.setup(
-    name="causal_disentangle_pkg", 
-    version="0.0.1",   
+    name="causal_vae", 
+    version="1.0",   
     author="mengyueyang",  
     author_email="yangmengyue2@huawei.com",
     description="Causal toy images and disentanglement method",

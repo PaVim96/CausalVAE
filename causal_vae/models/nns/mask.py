@@ -9,7 +9,7 @@
 import numpy as np
 import torch
 import torch.nn.functional as F
-from codebase import utils as ut
+from causal_vae import utils as ut
 from torch import autograd, nn, optim
 from torch import nn
 from torch.nn import functional as F
@@ -18,7 +18,7 @@ device = torch.device("cuda:0" if(torch.cuda.is_available()) else "cpu")
 import numpy as np
 import torch
 import torch.nn.functional as F
-from codebase import utils as ut
+from causal_vae import utils as ut
 from torch import autograd, nn, optim
 from torch import nn
 from torch.nn import functional as F

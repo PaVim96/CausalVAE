@@ -1,1 +1,1 @@
-name = "causal_disentangle_pkg"
+name = "causal_vae"
