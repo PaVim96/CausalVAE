@@ -29,6 +29,8 @@ class CausalVAE(nn.Module):
         nn = getattr(nns, nn)
         self.enc = nn.Encoder(self.z_dim, self.channel)
         self.dec = nn.Decoder_DAG(self.z_dim,self.z1_dim, self.z2_dim)
+        #Encodes from z1_dim to z1_dim
+        #Idea for z1_dim to z1_dim is because of mapping concepts to concepts
         self.dag = nn.DagLayer(self.z1_dim, self.z1_dim, i = inference)
         self.attn = nn.Attention(self.z2_dim)
         self.mask_z = nn.MaskLayer(self.z_dim,concept=self.z1_dim)
@@ -52,20 +54,36 @@ class CausalVAE(nn.Module):
         """
         assert label.size()[1] == self.z1_dim
 
+        #P.V: First encode the data with the data (images) and get mu and variance
         q_m, q_v = self.enc.encode(x.to(device))
+
+        #P.V: just reshaping stuff, for some reason q_v is set to ones?
         q_m, q_v = q_m.reshape([q_m.size()[0], self.z1_dim,self.z2_dim]),torch.ones(q_m.size()[0], self.z1_dim,self.z2_dim).to(device)
 
+
+        #P.V: this basically calculates some form of equation 1
         decode_m, decode_v = self.dag.calculate_dag(q_m.to(device), torch.ones(q_m.size()[0], self.z1_dim,self.z2_dim).to(device))
+
+        #P.V: reshaping 
         decode_m, decode_v = decode_m.reshape([q_m.size()[0], self.z1_dim,self.z2_dim]),decode_v
+
+
         if sample == False:
+          #P.V: I think mask refers to interventions?
           if mask != None  and mask in [0,1, 3]:
               z_mask = torch.ones(q_m.size()[0], self.z1_dim,self.z2_dim).to(device)*adj
               decode_m[:, mask, :] = z_mask[:, mask, :]
               decode_v[:, mask, :] = z_mask[:, mask, :]
+
+          #Mask the encoding
           m_zm, m_zv = self.dag.mask_z(decode_m.to(device)).reshape([q_m.size()[0], self.z1_dim,self.z2_dim]),decode_v.reshape([q_m.size()[0], self.z1_dim,self.z2_dim])
+          
+          #Mask the labels
           m_u = self.dag.mask_u(label.to(device))
           #mask
           
+
+          #lost
           f_z = self.mask_z.mix(m_zm).reshape([q_m.size()[0], self.z1_dim,self.z2_dim]).to(device)
           
           e_tilde = self.attn.attention(decode_m.reshape([q_m.size()[0], self.z1_dim,self.z2_dim]).to(device),q_m.reshape([q_m.size()[0], self.z1_dim,self.z2_dim]).to(device))[0]

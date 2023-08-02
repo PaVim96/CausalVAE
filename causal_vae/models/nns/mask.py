@@ -245,6 +245,7 @@ class DagLayer(nn.Linear):
         super(Linear, self).__init__()
         self.in_features = in_features
         self.out_features = out_features
+		#P.V: i -> inference
         self.i = i
         self.a = torch.zeros(out_features,out_features)
         self.a = self.a
@@ -262,13 +263,15 @@ class DagLayer(nn.Linear):
             self.bias = Parameter(torch.Tensor(out_features))
         else:
             self.register_parameter('bias', None)
-            
+    
+	#P.V:
     def mask_z(self,x):
         self.B = self.A
         #if self.i:
         #    x = x.view(-1, x.size()[1], 1)
         #    x = torch.matmul((self.B+0.5).t().int().float(), x)
         #    return x
+		
         x = torch.matmul(self.B.t(), x)
         return x
         
@@ -296,7 +299,7 @@ class DagLayer(nn.Linear):
         #x = F.linear(x, torch.inverse((torch.abs(self.A))+self.I), self.bias)
         
         if x.dim()>2:
-            x = x.permute(0,2,1)
+            x = x.permute(0,2,1) 
         x = F.linear(x, torch.inverse(self.I - self.A.t()), self.bias) 
         #print(x.size())
        
@@ -486,6 +489,8 @@ class ConvDec(nn.Module):
     return z
 
 class Encoder(nn.Module):
+	#Encoder here means a potential conditional Encoder (I think) 
+	#The conditional encoding takes 
 	def __init__(self, z_dim, channel=4, y_dim=4):
 		super().__init__()
 		self.z_dim = z_dim
