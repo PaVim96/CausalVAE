@@ -66,6 +66,8 @@ class CausalVAE(nn.Module):
               z_mask = torch.ones(q_m.size()[0], self.z1_dim,self.z2_dim).to(device)*adj
               decode_m[:, mask, :] = z_mask[:, mask, :]
               decode_v[:, mask, :] = z_mask[:, mask, :]
+
+              
           m_zm, m_zv = self.dag.mask_z(decode_m.to(device)).reshape([q_m.size()[0], self.z1_dim,self.z2_dim]),decode_v.reshape([q_m.size()[0], self.z1_dim,self.z2_dim])
           m_u = self.dag.mask_u(label.to(device))
           
@@ -93,9 +95,14 @@ class CausalVAE(nn.Module):
         rec = -torch.mean(rec)
 
         p_m, p_v = torch.zeros(q_m.size()), torch.ones(q_m.size())
+
+        #should be p(z|u)
         cp_m, cp_v = ut.condition_prior(self.scale, label, self.z2_dim)
         cp_v = torch.ones([q_m.size()[0],self.z1_dim,self.z2_dim]).to(device)
+
         cp_z = ut.conditional_sample_gaussian(cp_m.to(device), cp_v.to(device))
+
+
         kl = torch.zeros(1).to(device)
         kl = alpha*ut.kl_normal(q_m.view(-1,self.z_dim).to(device), q_v.view(-1,self.z_dim).to(device), p_m.view(-1,self.z_dim).to(device), p_v.view(-1,self.z_dim).to(device))
         

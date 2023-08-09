@@ -1,1 +1,6 @@
 __pycache__
+*/__pycache__
+causal_data/causal_data/*
+figs_vae/*
+*.egg-info
+

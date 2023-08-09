@@ -21,6 +21,33 @@ device = torch.device("cuda:0" if(torch.cuda.is_available()) else "cpu")
 bce = torch.nn.BCEWithLogitsLoss(reduction='none')
 bce3 =  torch.nn.BCELoss(reduction='none')
 
+
+class Lambda_Param:
+	def __init__(self, gamma, eta, c = 1):
+		self.gamma = gamma 
+		self.eta = eta
+		self.lmbd = None
+		self.h_a_prev = None
+		self.c_s = c
+	
+
+
+	def get_lambda(self, h_a, change = True):
+		if not change: 
+			return self.lmbd
+		h_a = h_a.detach()
+		if self.lmbd is None: 
+			self.lmbd = self.c_s
+			self.h_a_prev = h_a
+		need_change = abs(h_a) > self.gamma * abs(self.h_a_prev)
+		self.lmbd = self.lmbd + self.c_s * h_a
+		if need_change:
+			self.c_s = self.eta * self.c_s
+		self.h_a_prev = h_a
+		return self.lmbd 
+		
+
+
 def mask_threshold(x):
   x = (x+0.5).int().float()
   return x
@@ -87,6 +114,7 @@ def condition_prior(scale, label, dim):
 			mean[i][j] = torch.ones(dim)*mul
 			var[i][j] = torch.ones(dim)*1
 	return mean, var
+
 
  
 def bce2(r, x):

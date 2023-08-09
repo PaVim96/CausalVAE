@@ -40,6 +40,21 @@ class CausalVAE(nn.Module):
         self.z_prior_v = torch.nn.Parameter(torch.ones(1), requires_grad=False)
         self.z_prior = (self.z_prior_m, self.z_prior_v)
 
+
+
+    def trunc_for_pretrain(self): 
+        """
+        Sets the gradients of every layer except the MaskLayer (as in paper stated) to zero 
+        Required for pre-training
+        """
+        layers_to_zero = [self.enc, self.dec, self.attn]
+        for layer in layers_to_zero:
+            params = layer.parameters()
+            for param in params: 
+                param.grad = None
+        
+        
+
     def negative_elbo_bound(self, x, label, mask = None, sample = False, adj = None, lambdav=0.001):
         """
         Computes the Evidence Lower Bound, KL and, Reconstruction costs

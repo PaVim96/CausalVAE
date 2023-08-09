@@ -184,10 +184,10 @@ def whether_num_fall_into_intevals(number, intervals_list):
    return False
    
 
-def get_batch_unin_dataset_withlabel(dataset_dir, batch_size, dataset="train"):
+def get_batch_unin_dataset_withlabel(dataset_dir, batch_size, dataset="train", shuffle = False):
   
 	dataset = dataload_withlabel(dataset_dir, dataset)
-	dataset = Data.DataLoader(dataset, batch_size=batch_size, shuffle=False)
+	dataset = Data.DataLoader(dataset, batch_size=batch_size, shuffle=shuffle)
 
 	return dataset
  

@@ -247,7 +247,12 @@ class DagLayer(nn.Linear):
         self.out_features = out_features
 		#P.V: i -> inference
         self.i = i
-        self.a = torch.zeros(out_features,out_features)
+		#P.V: init of paper initializes this as matrix where diagonal entries are zero 
+		#thus we change it
+        self.a = torch.ones(out_features,out_features)  - torch.eye(out_features)
+		#OLD:
+		#self.a = torch.zeros(out_features,out_features)
+		
         self.a = self.a
         #self.a[0][1], self.a[0][2], self.a[0][3] = 1,1,1
         #self.a[1][2], self.a[1][3] = 1,1
@@ -352,11 +357,14 @@ class DagLayer(nn.Linear):
     def forward(self, x):
         x = x * torch.inverse((self.A)+self.I)
         return x
+    
       
 class ConvEncoder(nn.Module):
 	def __init__(self, out_dim=None):
 		super().__init__()
 		# init 96*96
+		#TODO:P.V: but in the paper u guys say 128 x 128 :o
+		
 		self.conv1 = torch.nn.Conv2d(3, 32, 4, 2, 1) # 48*48
 		self.conv2 = torch.nn.Conv2d(32, 64, 4, 2, 1, bias=False) # 24*24
 		self.conv3 = torch.nn.Conv2d(64, 1, 4, 2, 1, bias=False)
@@ -403,12 +411,17 @@ class ConvEncoder(nn.Module):
 		var = F.softplus(var) + 1e-8
 		#var = torch.reshape(var, [-1, 16, 16])
 		#print(mu.size())
+
+		print(mu.size())
 		return  mu, var
 	def encode_simple(self,x):
 		x = self.conv6(x)
 		m,v = ut.gaussian_parameters(x, dim=1)
 		#print(m.size())
 		return m,v
+	
+
+
 class ConvDecoder(nn.Module):
 	def __init__(self, out_dim = None):
 		super().__init__()
