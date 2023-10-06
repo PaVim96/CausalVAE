@@ -249,7 +249,8 @@ class DagLayer(nn.Linear):
         self.i = i
 		#P.V: init of paper initializes this as matrix where diagonal entries are zero 
 		#thus we change it
-        self.a = torch.ones(out_features,out_features)  - torch.eye(out_features)
+        self.a = torch.ones(out_features,out_features) * 0.5
+        #self.a = torch.ones(out_features,out_features)  - torch.eye(out_features)
 		#OLD:
 		#self.a = torch.zeros(out_features,out_features)
 		

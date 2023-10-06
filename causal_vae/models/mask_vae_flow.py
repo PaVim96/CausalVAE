@@ -75,7 +75,6 @@ class CausalVAE(nn.Module):
         #P.V: just reshaping stuff, for some reason q_v is set to ones?
         q_m, q_v = q_m.reshape([q_m.size()[0], self.z1_dim,self.z2_dim]),torch.ones(q_m.size()[0], self.z1_dim,self.z2_dim).to(device)
 
-
         #P.V: this basically calculates some form of equation 1
         decode_m, decode_v = self.dag.calculate_dag(q_m.to(device), torch.ones(q_m.size()[0], self.z1_dim,self.z2_dim).to(device))
 
